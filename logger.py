@@ -58,33 +58,28 @@ def search_contact():
             print(contact_data)
 
 def delete_contact():
+    surname = input_surname()
+    name = input_name()
+    patronymic = input_patronymic()
     with open("phonebook.json", 'r', encoding='utf-8') as file:
-        data = json.load(file)
-        
-    count_rows = len(data)
-    if count_rows == 0:
-        print("Файл пусто!")
-    else:
-        number_row = int(input(f"Введите номер строки "
-                               f"от 1 до {count_rows}: "))
-        while number_row < 1 or number_row > count_rows:
-            number_row = int(input(f"Ошибка!"
-                                   f"Введите номер строки "
-                                   f"от 1 до {count_rows}: "))
-        
-        del data[number_row - 1]
-        
-        updated_data = [{'column2': row['column2'], 
-                        'column3': row['column3'], 
-                        'column4': row['column4'], 
-                        'column5': row['column5']} 
-                        for row in data]
-        
-        with open("phonebook.json", 'w', encoding='utf-8') as file:
-            json.dump(updated_data, file, ensure_ascii=False, indent=4)
-        
-        print("Строка успешно удалена!")
+        contacts = file.readlines()
 
+    updated_contacts = []
+    found = False
+    for contact in contacts:
+        contact_data = json.loads(contact)
+        if contact_data["surname"] == surname and contact_data["name"] == name and contact_data["patronymic"] == patronymic:
+            found = True
+            continue
+        updated_contacts.append(contact)
+
+    if found:
+        with open("phonebook.json", 'w', encoding='utf-8') as file:
+            file.writelines(updated_contacts)
+        print("Контакт успешно удален.")
+    else:
+        print("Контакт не найден.")
+        
 def change_contact():
       pass 
 
