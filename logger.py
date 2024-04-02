@@ -79,9 +79,31 @@ def delete_contact():
         print("Контакт успешно удален.")
     else:
         print("Контакт не найден.")
-        
+         
 def change_contact():
-      pass 
+    surname = input_surname()
+    name = input_name()
+    patronymic = input_patronymic()
+    with open("phonebook.json", 'r', encoding='utf-8') as file:
+        contacts = file.readlines()
+
+    updated_contacts = []
+    found = False
+    for contact in contacts:
+        contact_data = json.loads(contact)
+        if contact_data["surname"] == surname and contact_data["name"] == name and contact_data["patronymic"] == patronymic:
+            found = True
+            new_contact = create_contact()
+            updated_contacts.append(json.dumps(new_contact) + "\n")
+        else:
+            updated_contacts.append(contact)
+
+    if found:
+        with open("phonebook.json", 'w', encoding='utf-8') as file:
+            file.writelines(updated_contacts)
+        print("Контакт успешно изменен.")
+    else:
+        print("Контакт не найден.")
 
 def import_contact():
       pass 
